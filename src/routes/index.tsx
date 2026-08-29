@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster as Sonner } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/toaster";
 import { CasesProvider } from "@/contexts/CasesContext";
 import Index from "@/pages/Index";
 
@@ -31,6 +32,7 @@ function HomeRoute() {
       <CasesProvider>
         <Index />
         <Sonner />
+        <Toaster />
       </CasesProvider>
     </TooltipProvider>
   );

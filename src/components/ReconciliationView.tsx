@@ -84,20 +84,6 @@ export const ReconciliationView = ({ caseRecord }: ReconciliationViewProps) => {
   const rec = caseRecord.reconciliation!;
   const needsFix = rec.overall === "needsFix";
   const taxRows = rec.tax?.rows ?? [];
-  const taxMismatches = taxRows.filter((r) => !r.match);
-
-  const attachTaxExport = (list: FileList | null) => {
-    const incoming = Array.from(list || []);
-    if (incoming.length === 0) return;
-    updateCase(caseRecord.id, {
-      taxFiles: [
-        ...(caseRecord.taxFiles ?? []),
-        ...incoming.map((f) => ({ name: f.name, type: f.type, size: f.size, file: f, url: URL.createObjectURL(f) })),
-      ],
-      reconciliation: undefined,
-    });
-    toast.success("خروجی سامانه مؤدیان اضافه شد — در حال بررسی مغایرت");
-  };
 
   const handleExport = (format: "excel" | "docx" | "json") => {
     updateCase(caseRecord.id, { status: "exported" });
@@ -151,76 +137,6 @@ export const ReconciliationView = ({ caseRecord }: ReconciliationViewProps) => {
             </li>
           ))}
         </ul>
-      </div>
-
-      <div>
-        <h3 className="text-sm font-semibold text-muted-foreground mb-3">گزارش مغایرت مالیاتی (سامانه مؤدیان)</h3>
-        {!rec.tax?.available ? (
-          <div className="rounded-xl border border-dashed border-border p-5 text-center space-y-3">
-            <p className="text-sm text-muted-foreground">
-              برای بررسی مغایرت مالیاتی، خروجی سامانه مؤدیان این فاکتور را اضافه کنید.
-            </p>
-            <input
-              type="file"
-              multiple
-              accept=".xlsx,.xls,.csv,.pdf,.xml,.json"
-              id={`tax-upload-${caseRecord.id}`}
-              className="hidden"
-              onChange={(e) => attachTaxExport(e.target.files)}
-            />
-            <label htmlFor={`tax-upload-${caseRecord.id}`}>
-              <Button asChild variant="outline" size="sm" className="gap-2">
-                <span className="cursor-pointer">
-                  <IconSheet className="h-4 w-4 text-accent" />
-                  افزودن خروجی مؤدیان
-                </span>
-              </Button>
-            </label>
-          </div>
-        ) : (
-          <div className="rounded-xl border border-border overflow-hidden">
-            <div className="flex items-center gap-2 px-4 py-3 bg-secondary/40 text-sm">
-              {taxMismatches.length > 0 ? (
-                <>
-                  <IconNeedsFix className="h-4 w-4 text-warning" />
-                  <span>{taxMismatches.length} مغایرت بین فاکتور و خروجی سامانه مؤدیان</span>
-                </>
-              ) : (
-                <>
-                  <IconValidated className="h-4 w-4 text-success" />
-                  <span>مغایرتی یافت نشد</span>
-                </>
-              )}
-              <span className="text-xs text-muted-foreground mr-auto">
-                منبع: {caseRecord.taxFiles.map((f) => f.name).join("، ")}
-              </span>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse text-sm">
-                <thead>
-                  <tr className="bg-muted/40 border-b border-border">
-                    <th className="p-3 text-right font-medium">مورد</th>
-                    <th className="p-3 text-right font-medium">فاکتور</th>
-                    <th className="p-3 text-right font-medium">سامانه مؤدیان</th>
-                    <th className="p-3 text-right font-medium">نتیجه</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {taxRows.map((r) => (
-                    <tr key={r.field} className={cn("border-b border-border last:border-0", !r.match && "bg-warning/5")}>
-                      <td className="p-3">{r.field}</td>
-                      <td className="p-3 text-muted-foreground">{r.invoice}</td>
-                      <td className="p-3 text-muted-foreground">{r.portal}</td>
-                      <td className={cn("p-3 font-medium", r.match ? "text-success" : "text-warning")}>
-                        {r.match ? "✓ منطبق" : "⚠ مغایرت"}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
       </div>
 
       <div className="pt-4 border-t border-border">

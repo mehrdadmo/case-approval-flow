@@ -83,7 +83,6 @@ export const ReconciliationView = ({ caseRecord }: ReconciliationViewProps) => {
 
   const rec = caseRecord.reconciliation!;
   const needsFix = rec.overall === "needsFix";
-  const taxRows = rec.tax?.rows ?? [];
 
   const handleExport = (format: "excel" | "docx" | "json") => {
     updateCase(caseRecord.id, { status: "exported" });

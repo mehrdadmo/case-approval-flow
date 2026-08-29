@@ -170,49 +170,6 @@ export const UploadDialog = ({ open, onOpenChange }: UploadDialogProps) => {
                 </div>
               )}
 
-              <div className="rounded-xl border border-accent/30 bg-accent/5 p-4 space-y-3">
-                <div className="flex items-start gap-2">
-                  <IconSheet className="h-4 w-4 text-accent mt-0.5 shrink-0" />
-                  <div>
-                    <p className="text-sm font-medium">خروجی سامانه مؤدیان (اختیاری)</p>
-                    <p className="text-xs text-muted-foreground mt-0.5">
-                      برای بررسی مغایرت مالیاتی، فایل خروجی سامانه مؤدیان را اینجا اضافه کنید. سیستم پس از استخراج فاکتور، گزارش مغایرت بین فاکتور و خروجی مؤدیان را ارائه می‌دهد.
-                    </p>
-                  </div>
-                </div>
-                <input
-                  type="file"
-                  multiple
-                  accept=".xlsx,.xls,.csv,.pdf,.xml,.json"
-                  onChange={(e) => setTaxFiles((prev) => [...prev, ...Array.from(e.target.files || [])])}
-                  className="hidden"
-                  id="upload-tax-input"
-                />
-                <label htmlFor="upload-tax-input">
-                  <Button asChild variant="outline" size="sm">
-                    <span className="cursor-pointer">افزودن خروجی مؤدیان</span>
-                  </Button>
-                </label>
-                {taxFiles.length > 0 && (
-                  <div className="space-y-2">
-                    {taxFiles.map((f, i) => (
-                      <div key={i} className="flex items-center justify-between p-2.5 rounded-lg border border-border bg-card">
-                        <div className="flex items-center gap-2 min-w-0">
-                          <IconSheet className="h-4 w-4 text-accent shrink-0" />
-                          <span className="text-sm truncate">{f.name}</span>
-                        </div>
-                        <button
-                          onClick={() => setTaxFiles((prev) => prev.filter((_, j) => j !== i))}
-                          className="h-6 w-6 rounded hover:bg-destructive/10 flex items-center justify-center"
-                        >
-                          <X className="h-3.5 w-3.5 text-destructive" />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
               <div className="flex justify-start gap-2">
                 <Button onClick={handleSubmit} disabled={files.length === 0} className="gap-2">
                   <IconDoc className="h-4 w-4" />
